@@ -2,7 +2,14 @@
 #include <vector>
 #include <algorithm>
 #include <sstream>
-using namespace std;
+
+using std::string,
+    std::vector,
+    std::cin,
+    std::cout,
+    std::cerr,
+    std::istringstream;
+
 
 vector<int> inputSequence() {
 
@@ -15,7 +22,7 @@ vector<int> inputSequence() {
         cerr << "Error: Empty input.";
         exit(1);
     }
-    for (char c : inputString) {
+    for (char& c : inputString) {
         if (!isdigit(c) && c != ' ') {
             cerr << "Error: There is a non-integer in the sequence.";
             exit(1);
@@ -27,7 +34,6 @@ vector<int> inputSequence() {
     while (iss >> number) {
         sequence.push_back(number);
     }
-    cout << inputString;
 
     return sequence;
 }
@@ -52,7 +58,7 @@ void printUniqueNumbers(const vector<int>& uniqueNumbers) {
     for (int num : uniqueNumbers) {
         cout << num << " ";
     }
-    cout << endl;
+    cout << '\n';
 }
 
 int main() {

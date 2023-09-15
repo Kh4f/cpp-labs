@@ -1,8 +1,10 @@
 #include <iostream>
 #include <string>
-#include <sstream>
 
-using namespace std;
+using std::string, 
+    std::cout, 
+    std::cin, 
+    std::cerr;
 
 
 double getInputX() {
@@ -18,7 +20,7 @@ double getInputX() {
 
     int dotCount = 0;
 
-    for (char c : input) {
+    for (char& c : input) {
         if (!isdigit(c) && c != '.') {
             cerr << "Error: The entered number is not a double.";
             exit(1);
@@ -53,7 +55,7 @@ unsigned short chooseFunctionType() {
         exit(1);
     }
 
-    for (char c : input) {
+    for (char& c : input) {
         if (!isdigit(c)) {
             cerr << "Error: The entered number is not an integer.";
             exit(1);
@@ -65,7 +67,7 @@ unsigned short chooseFunctionType() {
     return f_type;
 }
 
-double calculateFunction(double& x, unsigned short f_type) {
+double calculateFunction(double& x, unsigned short& f_type) {
 
     double f;
 
@@ -87,7 +89,7 @@ double calculateFunction(double& x, unsigned short f_type) {
     return f;
 }
 
-double calculateY(double x, double f) {
+double calculateY(double& x, double& f) {
 
     double y;
 
