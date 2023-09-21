@@ -11,25 +11,36 @@ using std::vector,
 
 vector<int> inputSequence() {
 
-    vector<int> sequence;
+    vector<std::string> stringSequence;
+    vector<int> numSequence;
     std::string inputString;
 
     cout << "Enter sequence elements separated by spaces: ";
     getline(cin >> std::ws, inputString);
 
-    for (char& i : inputString) {
-        if (!isdigit(i) && i != ' ') {
+    std::istringstream iss(inputString);
+    std::string num;
+    while (iss >> num) {
+        stringSequence.push_back(num);
+    }
+    
+
+    for (int i = 0; i < stringSequence.size(); ++i) {
+        if (stringSequence[i] == "-") {
             throw std::invalid_argument("Error: There is a non-integer in the sequence.");
         }
+        if (stringSequence[i][0] != '-' && !isdigit(stringSequence[i][0])) {
+            throw std::invalid_argument("Error: There is a non-integer in the sequence.");
+        }
+        for (char j = 1; j < stringSequence[i].length(); j++) {
+            if (!isdigit(stringSequence[i][j])) {
+                throw std::invalid_argument("Error: There is a non-integer in the sequence.");
+            }
+        }
+        numSequence.push_back(stoi(stringSequence[i]));
     }
 
-    std::istringstream iss(inputString);
-    int number;
-    while (iss >> number) {
-        sequence.push_back(number);
-    }
-
-    return sequence;
+    return numSequence;
 }
 
 vector<int> removeDuplicates(const vector<int>& sequence) {
@@ -56,17 +67,16 @@ void printUniqueNumbers(const vector<int>& uniqueNumbers) {
 }
 
 int main() {
-    vector<int> sequence;
     try {
-        sequence = inputSequence();
+        vector<int> sequence = inputSequence();
+
+        sort(sequence.begin(), sequence.end());
+
+        vector<int> uniqueNumbers = removeDuplicates(sequence);
+
+        printUniqueNumbers(uniqueNumbers);
     }
     catch (const std::invalid_argument& err) {
         cerr << err.what() << '\n';
-    }
-
-    sort(sequence.begin(), sequence.end());
-
-    vector<int> uniqueNumbers = removeDuplicates(sequence);
-
-    printUniqueNumbers(uniqueNumbers);
+    }   
 }

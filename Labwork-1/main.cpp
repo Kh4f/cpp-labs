@@ -12,15 +12,22 @@ double getInputX() {
     cout << "Enter x: ";
     getline(cin >> std::ws, input);
 
+    if (input == "-") {
+        throw std::invalid_argument("Error: There is a non-integer in the sequence.");
+    }
+    if (input[0] != '-' && !isdigit(input[0])) {
+        throw std::invalid_argument("Error: The entered number is not a double.");
+    }
+
     int dotCount = 0;
-    for (char &c : input) {
-        if (c == '.') {
+    for (int i = 1; i < input.length(); i++) {    
+        if (input[i] == '.') {
             dotCount++;
             if (dotCount > 1) {
                 throw std::invalid_argument("Error: The entered number is not a double.");
             }
             continue;
-        } else if (!isdigit(c)) {
+        } else if (!isdigit(input[i])) {
             throw std::invalid_argument("Error: The entered number is not a double.");
         }
     }
