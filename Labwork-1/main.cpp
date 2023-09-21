@@ -1,73 +1,52 @@
 #include <iostream>
 #include <string>
 
-using std::string, 
-    std::cout, 
+using std::cout, 
     std::cin, 
     std::cerr;
 
 
 double getInputX() {
 
-    string input;
+    std::string input;
     cout << "Enter x: ";
-    getline(cin, input);
-
-    if (input.empty()) {
-        cerr << "Error: Empty input.";
-        exit(1);
-    }
+    getline(cin >> std::ws, input);
 
     int dotCount = 0;
-
-    for (char& c : input) {
-        if (!isdigit(c) && c != '.') {
-            cerr << "Error: The entered number is not a double.";
-            exit(1);
-        }
-
+    for (char &c : input) {
         if (c == '.') {
             dotCount++;
             if (dotCount > 1) {
-                cerr << "Error: The entered number is not a double.";
-                exit(1);
+                throw std::invalid_argument("Error: The entered number is not a double.");
             }
+            continue;
+        } else if (!isdigit(c)) {
+            throw std::invalid_argument("Error: The entered number is not a double.");
         }
     }
-    double x = stod(input);
-
-    return x;
+    return stod(input);
 }
 
-unsigned short chooseFunctionType() {
+int chooseFunctionType() {
 
-    string input;
-
+    std::string input;
     cout << "\n" << "Choose f(x) type: " << "\n"
         << "1. x^2" << "\n"
         << "2. e^x" << "\n"
         << "3. sin(x)" << "\n"
         << ">> ";
-    getline(cin, input);
-
-    if (input.empty()) {
-        cerr << "Error: Empty input.";
-        exit(1);
-    }
+    getline(cin >> std::ws, input);
 
     for (char& c : input) {
         if (!isdigit(c)) {
-            cerr << "Error: The entered number is not an integer.";
-            exit(1);
+            throw std::invalid_argument("Error: The entered number is not an integer.");
         }
     }
 
-    unsigned short f_type = stoi(input);
-
-    return f_type;
+    return stoi(input);
 }
 
-double calculateFunction(double& x, unsigned short& f_type) {
+double calculateFunction(double& x, int& f_type) {
 
     double f;
 
@@ -82,8 +61,7 @@ double calculateFunction(double& x, unsigned short& f_type) {
         f = sin(x);
         break;
     default:
-        cerr << "Error: Non-existent option.";
-        exit(1);
+        throw std::invalid_argument("Error: Non-existent option.");
     }
 
     return f;
@@ -91,25 +69,18 @@ double calculateFunction(double& x, unsigned short& f_type) {
 
 double calculateY(double& x, double& f) {
 
-    double y;
-
-    if (x > 0) {
-        y = sin(x) / (1 + pow(f, 4));
-    }
-    else {
-        y = cbrt(cos(x) * cos(x));
-    }
-
-    return y;
+    return (x > 0) ? sin(x)/(1 + pow(f, 4)) : cbrt(cos(x) * cos(x));
 }
 
 int main() {
-
-    double x = getInputX();
-    unsigned short f_type = chooseFunctionType();
-    double f = calculateFunction(x, f_type);
-    double y = calculateY(x, f);
-
-    cout << "\n" << "Result: y = " << y << "\n";
+    try {
+        double x = getInputX();
+        int f_type = chooseFunctionType();
+        double f = calculateFunction(x, f_type);
+        double y = calculateY(x, f);
+        cout << "\n" << "Result is: y = " << y << "\n";
+    }
+    catch (const std::invalid_argument &err) {
+        cerr << err.what() << '\n';
+    } 
 }
-

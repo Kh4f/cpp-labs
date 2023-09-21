@@ -3,33 +3,27 @@
 #include <algorithm>
 #include <sstream>
 
-using std::string,
-    std::vector,
+using std::vector,
     std::cin,
     std::cout,
-    std::cerr,
-    std::istringstream;
+    std::cerr;
 
 
 vector<int> inputSequence() {
 
     vector<int> sequence;
-    string inputString;
+    std::string inputString;
 
     cout << "Enter sequence elements separated by spaces: ";
-    getline(cin, inputString);
-    if (inputString.empty()) {
-        cerr << "Error: Empty input.";
-        exit(1);
-    }
-    for (char& c : inputString) {
-        if (!isdigit(c) && c != ' ') {
-            cerr << "Error: There is a non-integer in the sequence.";
-            exit(1);
+    getline(cin >> std::ws, inputString);
+
+    for (char& i : inputString) {
+        if (!isdigit(i) && i != ' ') {
+            throw std::invalid_argument("Error: There is a non-integer in the sequence.");
         }
     }
 
-    istringstream iss(inputString);
+    std::istringstream iss(inputString);
     int number;
     while (iss >> number) {
         sequence.push_back(number);
@@ -62,11 +56,17 @@ void printUniqueNumbers(const vector<int>& uniqueNumbers) {
 }
 
 int main() {
-    vector<int> sequence = inputSequence();
+    vector<int> sequence;
+    try {
+        sequence = inputSequence();
+    }
+    catch (const std::invalid_argument& err) {
+        cerr << err.what() << '\n';
+    }
+
     sort(sequence.begin(), sequence.end());
 
     vector<int> uniqueNumbers = removeDuplicates(sequence);
 
     printUniqueNumbers(uniqueNumbers);
 }
-
