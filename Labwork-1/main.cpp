@@ -9,8 +9,42 @@ using std::cout,
 double getInputX() {
 
     std::string input;
-    cout << "Enter x: ";
-    getline(cin >> std::ws, input);
+    double result;
+
+    xInputLoop:
+    do {
+        cout << "Enter x: ";
+        getline(cin >> std::ws, input);
+
+        if (input == "-") {
+            cout << "Error: There is a non-integer in the sequence.\n\n";
+            goto xInputLoop;
+        }
+        if (input[0] != '-' && !isdigit(input[0])) {
+            cout << "Error: The entered number is not a double.\n\n";
+            goto xInputLoop;
+        }
+
+        int dotCount = 0;
+        for (int i = 1; i < input.length(); i++) {
+            if (input[i] == '.') {
+                dotCount++;
+                if (dotCount > 1) {
+                    cout << "Error: The entered number is not a double.\n\n";
+                    goto xInputLoop;
+                }
+                continue;
+
+            } else if (!isdigit(input[i])) {
+                cout << "Error: The entered number is not a double.\n\n";
+                goto xInputLoop;
+            }
+        }
+        result = stod(input);
+
+    } while (!result);
+    
+
 
     if (input == "-") {
         throw std::invalid_argument("Error: There is a non-integer in the sequence.");
