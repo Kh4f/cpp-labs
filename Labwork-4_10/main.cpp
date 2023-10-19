@@ -9,41 +9,42 @@
 #include <algorithm>
 using namespace std;
 
-struct Employee {
-    string name;
-    string position;
-    double salary;
-};
-
-struct Exhibit {
-    string name;
-    string author;
-    int creationYear;
-    string description;
-    int hallNumber;
-
-    void displayInfo() {
-        cout << "Имя: \033[4m" << name << "\033[0m;\n"
-            << "Автор: " << author << ";\n"
-            << "Год создания: " << creationYear << ";\n"
-            << "Описание: " << description << ";\n"
-            << "Номер зала: " << hallNumber << ".\n\n";
-    }
-};
-
-struct Hall {
-    int number;
-    int capacity;
-    vector<Exhibit> exhibits;
-};
-
-struct Excursion {
-    int duration_min;
-    Employee guide;
-    double cost;
-};
 
 struct MyMuseum {
+
+    struct Exhibit {
+        string name;
+        string author;
+        int creationYear;
+        string description;
+        int hallNumber;
+
+        void displayInfo() {
+            cout << "Имя: \033[4m" << name << "\033[0m;\n"
+                << "Автор: " << author << ";\n"
+                << "Год создания: " << creationYear << ";\n"
+                << "Описание: " << description << ";\n"
+                << "Номер зала: " << hallNumber << ".\n\n";
+        }
+    };
+
+    struct Employee {
+        string name;
+        string position;
+        double salary;
+    };
+
+    struct Hall {
+        int number;
+        int capacity;
+        vector<Exhibit> exhibits;
+    };
+
+    struct Excursion {
+        int duration_min;
+        Employee guide;
+        double cost;
+    };
 
     string name;
     string address;
@@ -95,7 +96,6 @@ struct MyMuseum {
     }
 };
 
-
 void drawMenu(int& selected, string& header, vector<string> options) {
     system("cls");
 
@@ -129,17 +129,11 @@ int getSelectedOption(string header, vector<string> options) {
                 selected--;
                 redrawMenu = true;
             }
-            else {
-                redrawMenu = false;
-            }
             break;
         case 80: // Стрелка вниз
             if (selected < options.size() - 1) {
                 selected++;
                 redrawMenu = true;
-            }
-            else {
-                redrawMenu = false;
             }
             break;
         case 13: // Enter
@@ -157,7 +151,7 @@ void replaceDelimToSpace(string& str) {
 }
 
 void writeExhibitToFile(string& name, string& author, string& description, int& year, int& hallNumber) {
-    ofstream outputFile("exhibits.txt", ios::app); // Открываем файл для добавления текста (std::ios::app)
+    ofstream outputFile("exhibits.txt", ios::app);
 
     if (!outputFile.is_open()) {
         cerr << "Не удалось открыть файл. \n";
@@ -173,6 +167,48 @@ void writeExhibitToFile(string& name, string& author, string& description, int& 
     outputFile.close();
 }
 
+int getAnInteger(string header) {
+    string inputValue;
+    out:
+    cout << header;
+    getline(cin >> ws, inputValue);
+    for (int i = 0; i < inputValue.length(); i++) {
+        char& c = inputValue[i];
+        if (c == '-' && i == 0) {
+            continue;
+        }
+        if (!isdigit(c)) {
+            cout << "Требуется целое число. Попробуйте ещё раз.\n";
+            goto out;
+        }
+    }
+    return stoi(inputValue);
+}
+
+int getPositiveInteger(string header) {
+    string inputValue;
+    out:
+    cout << header;
+    getline(cin >> ws, inputValue);
+    for (char& c : inputValue) {
+        if (!isdigit(c)) {
+            cout << "Требуется целое положительное число. Попробуйте ещё раз.\n";
+            goto out;
+        }
+    }
+    return stoi(inputValue);
+}
+
+void waitToPressEnter() {
+    cout << "(Нажмите Enter, чтобы вернуться)";
+    while (true) {
+        char input = _getch();
+        if (input == 13) {
+            break;
+        }
+    }
+}
+
 void createNewExhibit(MyMuseum& myMuseum) {
     string name, author, yearStr, description, hallNumberStr;
 
@@ -181,102 +217,59 @@ void createNewExhibit(MyMuseum& myMuseum) {
     cout << "Имя: ";
     getline(cin >> ws, name);
     replaceDelimToSpace(name);
+
     cout << "Автор: ";
     getline(cin >> ws, author);
     replaceDelimToSpace(author);
     
-    out1:
-    cout << "Год создания: ";
-    getline(cin >> ws, yearStr);
-    for (int i = 0; i < yearStr.length(); i++) {
-        char& c = yearStr[i];
-        if (c == '-' && i == 0)
-        {
-            continue;
-        }
-        if (!isdigit(c)) {
-            cout << "Требуется целое число. Попробуйте ещё раз. \n";
-            goto out1;
-        }
-    }
+    int year = getAnInteger("Год создания: ");
 
     cout << "Описание: ";
     getline(cin >> ws, description);
     replaceDelimToSpace(description);
-
-    out2:
-    cout << "Номер зала: ";
-    getline(cin >> ws, hallNumberStr);
-    for (char& c : hallNumberStr) {
-        if (!isdigit(c)) {
-            cout << "Требуется целое положительное число. Попробуйте ещё раз. \n";
-            goto out2;
-        }
-    }
     
-    int year = stoi(yearStr);
-    int hallNumber = stoi(hallNumberStr);
+    int hallNumber = getPositiveInteger("Номер зала: ");
 
     myMuseum.addExhibit(name, author, description, year, hallNumber);
     writeExhibitToFile(name, author, description, year, hallNumber);
-
     cout << "\nЭкспонат успешно добавлен.\n";
-    cout << "(Нажмите Enter, чтобы вернуться)";
-
-    while (true) {
-        char input = _getch();
-        if (input == 13)
-        {
-            return;
-        }
-    }
+    waitToPressEnter();
 }
 
-void chooseExhibit(MyMuseum& myMuseum) {
+void chooseActionOnExhibits(MyMuseum& myMuseum) {
     bool exitLoop = false;
+
     while (!exitLoop) {
-        int selectedAction = getSelectedOption("Выберите действие:", { "Вывести экспонаты всего музея", "Вывести экспонаты выбранного зала", "Вывести экспонаты, отфильтровав по году создания", "<-" });
+        int selectedAction = getSelectedOption("Выберите действие:", 
+            { "Вывести экспонаты всего музея", 
+            "Вывести экспонаты выбранного зала", 
+            "Вывести экспонаты, отфильтровав по году создания", 
+            "<-" });
         switch (selectedAction) {
         case 1: {
             system("cls");
-            bool exhExists = false;
-            for (Hall& hall : myMuseum.halls) {
-                for (Exhibit& exhibit : hall.exhibits) {
-                    exhExists = true;
+            bool exhibitExists = false;
+            for (MyMuseum::Hall& hall : myMuseum.halls) {
+                for (MyMuseum::Exhibit& exhibit : hall.exhibits) {
+                    exhibitExists = true;
                     exhibit.displayInfo();
                 }
             }
-            if (!exhExists) {
+            if (!exhibitExists) {
                 cout << "Экспонаты отсутствуют. \n";
             }
-            cout << "(Нажмите Enter, чтобы вернуться)";
-            while (true) {
-                char input = _getch();
-                if (input == 13)
-                {
-                    break;
-                }
-            }
+            waitToPressEnter();
             break;
         }
         case 2: {
-            string input;
-            out:
-            cout << "\nВведите номер зала: ";
-            cin >> input;
-            for (char& c : input) {
-                if (!isdigit(c)) {
-                    cout << "Требуется целое положительное число. Попробуйте ещё раз.";
-                    goto out;
-                }
-            }
+            int number = getPositiveInteger("\nВведите номер зала: ");
             system("cls");
+
             bool hallExists = false;
-            int number = stoi(input);
-            for (Hall& hall : myMuseum.halls) {
+            for (MyMuseum::Hall& hall : myMuseum.halls) {
                 if (hall.number == number) {
                     hallExists = true;
-                    for (Exhibit& exhibit : hall.exhibits) {
+                    for (MyMuseum::Exhibit& exhibit : hall.exhibits) {
                         exhibit.displayInfo();
                     }
                     break;
@@ -285,50 +278,12 @@ void chooseExhibit(MyMuseum& myMuseum) {
             if (!hallExists) {
                 cout << "В выбранном зале нет экспонатов. \n";
             }
-            cout << "(Нажмите Enter, чтобы вернуться)";
-            while (true) {
-                char input = _getch();
-                if (input == 13)
-                {
-                    break;
-                }
-            }
+            waitToPressEnter();
             break;
         }
         case 3: {
-            string input2;
-            out2:
-            cout << "\nВведите первый год диапазона: ";
-            cin >> input2;
-            for (int i = 0; i < input2.length(); i++) {
-                char& c = input2[i];
-                if (c == '-' && i == 0)
-                {
-                    continue;
-                }
-                if (!isdigit(c)) {
-                    cout << "Требуется целое число. Попробуйте ещё раз.";
-                    goto out2;
-                }
-            }
-            int minYear = stoi(input2);
-
-            out3:
-            cout << "Введите второй год: ";
-            cin >> input2;
-            for (int i = 0; i < input2.length(); i++) {
-                char& c = input2[i];
-                if (c == '-' && i == 0)
-                {
-                    continue;
-                }
-                if (!isdigit(c)) {
-                    cout << "Требуется целое число. Попробуйте ещё раз.";
-                    goto out3;
-                }
-            }
-            int maxYear = stoi(input2);
-
+            int minYear = getAnInteger("\nВведите первый год диапазона: ");
+            int maxYear = getAnInteger("Введите второй год диапазона: ");
             if (maxYear < minYear) {
                 int temp = maxYear;
                 maxYear = minYear;
@@ -337,8 +292,8 @@ void chooseExhibit(MyMuseum& myMuseum) {
 
             system("cls");
             bool exhExist = false;
-            for (Hall& hall : myMuseum.halls) {
-                for (Exhibit& exhibit : hall.exhibits) {
+            for (MyMuseum::Hall& hall : myMuseum.halls) {
+                for (MyMuseum::Exhibit& exhibit : hall.exhibits) {
                     if ((exhibit.creationYear >= minYear) && (exhibit.creationYear <= maxYear)) {
                         exhExist = true;
                         exhibit.displayInfo();
@@ -349,58 +304,44 @@ void chooseExhibit(MyMuseum& myMuseum) {
             if (!exhExist) {
                 cout << "Искомые экспонаты отсутствуют. \n";
             }
-            cout << "(Нажмите Enter, чтобы вернуться)";
-            while (true) {
-                char input = _getch();
-                if (input == 13)
-                {
-                    break;
-                }
-            }
+            waitToPressEnter();
             break;
         }
         case 4:
             exitLoop = true;
             break;
         }
-    }
-
-    
-    
+    }  
 }
 
-
-int main() {
-    MyMuseum myMuseum;
-
-    ifstream file("exhibits.txt");
-    if (!file.is_open()) {
-        cerr << "Не удалось открыть файл. \n";
-        return 1;
-    }
-    myMuseum.readExhibitsFromFile(file);
-
+void runMainMenu(MyMuseum& myMuseum) {
     bool exitLoop = false;
     while (!exitLoop) {
         int selectedAction = getSelectedOption("Выберите действие:", { "Добавить новый экспонат", "Выбрать экспонаты", "Выйти" });
         switch (selectedAction) {
         case 1:
-            try {
-                createNewExhibit(myMuseum);
-            }
-            catch (const invalid_argument& err) {
-                cerr << err.what() << '\n';
-                exit(1);
-                exitLoop = true;
-            }
+            createNewExhibit(myMuseum);
             break;
         case 2:
-            chooseExhibit(myMuseum);
+            chooseActionOnExhibits(myMuseum);
             break;
         case 3:
             exitLoop = true;
             break;
         }
     }
+}
+
+int main() {
+    MyMuseum myMuseum;
+
+    ifstream file("exhibits.txt");
+    if (!file.is_open()) {
+        cerr << "Не удалось открыть файл 'exhibits.txt'. \n";
+        return 1;
+    }
+    myMuseum.readExhibitsFromFile(file);
+
+    runMainMenu(myMuseum);
 }
 
