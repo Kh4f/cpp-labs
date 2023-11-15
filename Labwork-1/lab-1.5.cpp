@@ -1,9 +1,9 @@
 #include <iostream>
 #include <string>
 
-using std::cout, 
-    std::cin, 
-    std::cerr;
+using std::cout,
+std::cin,
+std::cerr;
 
 
 double getInputX() {
@@ -11,7 +11,7 @@ double getInputX() {
     std::string input;
     double result;
 
-    xInputLoop:
+xInputLoop:
     do {
         cout << "Enter x: ";
         getline(cin >> std::ws, input);
@@ -43,7 +43,7 @@ double getInputX() {
         result = stod(input);
 
     } while (!result);
-    
+
 
 
     if (input == "-") {
@@ -54,7 +54,7 @@ double getInputX() {
     }
 
     int dotCount = 0;
-    for (int i = 1; i < input.length(); i++) {    
+    for (int i = 1; i < input.length(); i++) {
         if (input[i] == '.') {
             dotCount++;
             if (dotCount > 1) {
@@ -92,17 +92,17 @@ double calculateFunction(double& x, int& f_type) {
     double f;
 
     switch (f_type) {
-    case 1:
-        f = pow(x, 2);
-        break;
-    case 2:
-        f = exp(x);
-        break;
-    case 3:   
-        f = sin(x);
-        break;
-    default:
-        throw std::invalid_argument("Error: Non-existent option.");
+        case 1:
+            f = pow(x, 2);
+            break;
+        case 2:
+            f = exp(x);
+            break;
+        case 3:
+            f = sin(x);
+            break;
+        default:
+            throw std::invalid_argument("Error: Non-existent option.");
     }
 
     return f;
@@ -110,7 +110,7 @@ double calculateFunction(double& x, int& f_type) {
 
 double calculateY(double& x, double& f) {
 
-    return (x > 0) ? sin(x)/(1 + pow(f, 4)) : cbrt(cos(x) * cos(x));
+    return (x > 0) ? sin(x) / (1 + pow(f, 4)) : cbrt(cos(x) * cos(x));
 }
 
 int main() {
@@ -120,8 +120,7 @@ int main() {
         double f = calculateFunction(x, f_type);
         double y = calculateY(x, f);
         cout << "\n" << "Result is: y = " << y << "\n";
-    }
-    catch (const std::invalid_argument &err) {
+    } catch (const std::invalid_argument& err) {
         cerr << err.what() << '\n';
-    } 
+    }
 }
