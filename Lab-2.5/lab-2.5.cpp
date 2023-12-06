@@ -2,11 +2,16 @@
 #include <vector>
 #include <algorithm>
 #include <sstream>
-
 using std::vector,
-    std::cin,
-    std::cout,
-    std::cerr;
+std::cin,
+std::cout,
+std::cerr;
+
+/*
+Тема 2: работа с массивами и указателями, функции.
+5.Для заданной последовательности целых чисел (среди которых могут быть повторяющиеся) 
+составить массив из чисел, которые входят в последовательность по одному разу.
+*/
 
 
 vector<int> inputSequence() {

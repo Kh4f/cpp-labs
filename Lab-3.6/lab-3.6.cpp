@@ -4,6 +4,12 @@
 #include <vector>
 #include <algorithm>
 
+/*
+Тема 3: работа с файлами в C++.
+6.Дан текстовый файл f1, содержащий текст на английском языке. 
+Отсортировать слова по возрастанию длины и полученный результат записать в файл f2.
+*/
+
 std::vector<std::string> textToWordsVector(std::ifstream& inputFile, std::ofstream& outputFile) {
     std::vector<std::string> words;
     std::string word;

@@ -4,7 +4,8 @@
 using namespace std;
 
 /*
-Написать класс «Односвязный список».
+Тема 6: перегрузка операторов, дружественные функции и классы, средства обработки ошибок и исключений.
+4.Написать класс «Односвязный список».
 Реализовать конструкторы, деструктор, методы добавления и удаления элементов.
 Реализовать перегрузку операторов доступа по индексу [], сложение (+) и разность (-) элементов двух списков.
 Предложить и реализовать дружественную функцию для данного класса.
@@ -139,7 +140,8 @@ public:
 		if (index == 0) {
 			addFirst(value);
 			return;
-		} else if (index == size) {
+		}
+		else if (index == size) {
 			addLast(value);
 			return;
 		}
@@ -160,7 +162,8 @@ public:
 		if (index == 0) {
 			removeFirst();
 			return;
-		} else if (index == (size - 1)) {
+		}
+		else if (index == (size - 1)) {
 			removeLast();
 			return;
 		}
@@ -260,7 +263,8 @@ public:
 			it1.next();
 			if (elementFound) {
 				result.remove(index);
-			} else {
+			}
+			else {
 				index += 1;
 			}
 		}
@@ -287,7 +291,7 @@ private:
 	Node* tail;
 	int size;
 };
- 
+
 template <typename T> bool isSubset(SinglyLinkedList<T>& list1, SinglyLinkedList<T>& list2) {
 	typename SinglyLinkedList<T>::Node* curr1 = list1.head;
 
@@ -364,9 +368,9 @@ int main() {
 	bool isSubsetResult = isSubset(list2, list1);
 	if (isSubsetResult) {
 		cout << "List2 is a subset of List1\n";
-	} else {
+	}
+	else {
 		cout << "List2 is NOT a subset of List1\n";
 	}
 }
-
 

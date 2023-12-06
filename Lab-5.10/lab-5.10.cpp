@@ -3,9 +3,14 @@
 #include <conio.h>
 using namespace std;
 
-// Написать абстрактный класс «Работник фирмы».
-// На его основе реализовать классы «Менеджер», «Администратор», «Программист» и т.п.
-// Написать программу, демонстрирующую работу с этими классами
+
+/*
+Тема 5: классы и объекты.
+10.Написать абстрактный класс «Работник фирмы».
+На его основе реализовать классы «Менеджер», «Администратор», «Программист» и т.п.
+Написать программу, демонстрирующую работу с этими классами.
+*/
+
 
 enum class WorkShift {
     Day,            // Дневная смена
@@ -352,7 +357,7 @@ void selectAction(Company& myCompany, int poistion) {
 void selectEmployeePosition(Company& myCompany) {
     bool exitLoop = false;
     while (!exitLoop) {
-        int selectedAction = getSelectedOption("Выберите должность работника компании: ", { "Менеджер", "Администратор", "Программист", "Выйти" });
+        int selectedAction = getSelectedOption("Выберите должность работника компании: ", {"Менеджер", "Администратор", "Программист"});
         switch (selectedAction) {
             case 1:
                 selectAction(myCompany, selectedAction);

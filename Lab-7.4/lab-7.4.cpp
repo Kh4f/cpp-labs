@@ -7,7 +7,7 @@ using namespace std;
 
 /*
 Тема 7: шаблоны функций и классов.
-#4. Для лабораторной #6 определить шаблоны соответствующих классов.
+4.Для лабораторной #6 определить шаблоны соответствующих классов.
 Написать тестовую программу, демонстрирующую работу шаблонных классов с различными типами данных.
 */
 
@@ -140,8 +140,7 @@ public:
 		if (index == 0) {
 			addFirst(value);
 			return;
-		}
-		else if (index == size) {
+		} else if (index == size) {
 			addLast(value);
 			return;
 		}
@@ -162,8 +161,7 @@ public:
 		if (index == 0) {
 			removeFirst();
 			return;
-		}
-		else if (index == (size - 1)) {
+		} else if (index == (size - 1)) {
 			removeLast();
 			return;
 		}
@@ -187,7 +185,7 @@ public:
 			return;
 		}
 		Node* currNode = head;
-
+		
 		cout << "[";
 		int index = 0;
 		while (currNode != nullptr) {
@@ -229,7 +227,7 @@ public:
 
 	public:
 		SinglyLinkedListIterator(Node* start) : curr(start) {}
-
+		
 		bool hasNext() {
 			return curr != nullptr;
 		}
@@ -284,8 +282,7 @@ public:
 			it1.next();
 			if (elementFound) {
 				result.remove(index);
-			}
-			else {
+			} else {
 				index += 1;
 			}
 		}
@@ -312,7 +309,7 @@ private:
 	Node* tail;
 	int size;
 };
-
+ 
 template <typename T> bool isSubset(SinglyLinkedList<T>& list1, SinglyLinkedList<T>& list2) {
 	typename SinglyLinkedList<T>::Node* curr1 = list1.head;
 
@@ -338,60 +335,8 @@ template <typename T> bool isSubset(SinglyLinkedList<T>& list1, SinglyLinkedList
 	return true;
 }
 
-//int main() {
-//	SinglyLinkedList<int> list1;
-//	list1.addFirst(1);
-//	list1.addFirst(2);
-//	list1.addFirst(3);
-//	cout << "Добавление в начало: " << list1.toString() << "\n";
-//
-//	list1.addLast(6);
-//	list1.addLast(5);
-//	list1.addLast(4);
-//	cout << "Добавление в конец: " << list1.toString() << "\n";
-//
-//	SinglyLinkedList<int> list2;
-//	list2.addLast(2);
-//	list2.addLast(15);
-//	list2.addLast(6);
-//
-//	list1.removeFirst();
-//	list1.removeLast();
-//	cout << "Удаление первого и последнего элемента: " << list1.toString() << "\n";
-//
-//	list1.remove(1);
-//	cout << "Удаление по индексу '1': " << list1.toString() << "\n";
-//
-//	list1.insert(1, 15);
-//	cout << "Вставка значения '15' по индексу '1': " << list1.toString() << "\n";
-//
-//	cout << "Итератор по элементам list1: ";
-//	SinglyLinkedList<int>::SinglyLinkedListIterator it = list1.iterator();
-//	while (it.hasNext()) {
-//		cout << it.get() << " ";
-//		it.next();
-//	}
-//	cout << "\n\n";
-//
-//	cout << "Получение элемента по оператору [0]: " << list1[0] << "\n\n";
-//
-//	SinglyLinkedList<int> list3 = list1 + list2;
-//	cout << "List1: " << list1.toString() << "\n";
-//	cout << "List2: " << list2.toString() << "\n";
-//	cout << "List3 = List1 + List2: " << list3.toString() << "\n\n";
-//
-//	SinglyLinkedList<int> list4 = list1 - list2;
-//	cout << "List1: " << list1.toString() << "\n";
-//	cout << "List2: " << list2.toString() << "\n";
-//	cout << "List4 = List1 - List2: " << list4.toString() << "\n\n";
-//
-//	bool isSubsetResult = isSubset(list2, list1);
-//	if (isSubsetResult) {
-//		cout << "List2 is a subset of List1\n";
-//	} else {
-//		cout << "List2 is NOT a subset of List1\n";
-//	}
-//}
+
+
 
 void drawMenu(int& selected, string& header, vector<string> options, string footer = "") {
 	system("cls");
@@ -405,7 +350,7 @@ void drawMenu(int& selected, string& header, vector<string> options, string foot
 			cout << "    ";
 		}
 		/*cout << options[i] << "\n";*/
-		cout << "• " << options[i] << "\n";
+		cout <<"• " << options[i] << "\n";
 		/*cout << i + 1 << "." << options[i] << "\n";*/
 	}
 	if (footer != "") {
@@ -494,13 +439,20 @@ int getIntegerValue(int& typeNumber) {
 			}
 		}
 	}
-
+	
 	return stoi(inputValue);
+}
+
+string getStringValue() {
+	string inputValue;
+	cout << "\nВведите значение нового элемента: ";
+	getline(cin >> ws, inputValue);
+
+	return inputValue;
 }
 
 double getDoubleValue(int& typeNumber) {
 	string input;
-	/*double result = 0.0;*/
 	bool valueIsValid = false;
 
 	while (!valueIsValid) {
@@ -553,22 +505,25 @@ void waitToPressEnter() {
 
 template <typename T> void addFirstOption(int& typeNumber, SinglyLinkedList<T>& list);
 
-template <typename T> void selectAction(int typeNumber, SinglyLinkedList<T>& list, string footer = "") {
+void selectActionForIntList(int typeNumber, SinglyLinkedList<int>& list, string footer = "") {
 	bool exitLoop = false;
 	while (!exitLoop) {
-		int selectedAction = getSelectedOption("Ваш текущий список: " + list.toString() + "\n\nВыберите действие: ",
-			{ "добавить в начало", "добавить в конец", "очистить", "<- назад" }, footer);
+		int selectedAction = getSelectedOption("Ваш текущий список: " + list.toString() + "\n\nВыберите действие: ", 
+			{ "добавить в начало", "добавить в конец", "очистить", "<- назад"}, footer);
+
 		switch (selectedAction) {
 		case 1: {
-			addFirstOption(typeNumber, list);
+			int value = getIntegerValue(typeNumber);
+			list.addFirst(value);
 			break;
 		}
 		case 2: {
-			/*addLastOption(typeName);*/
+			int value = getIntegerValue(typeNumber);
+			list.addLast(value);
 			break;
 		}
 		case 3: {
-			/*clearListOption();*/
+			list.removeAll();
 			break;
 		}
 		default: {
@@ -579,46 +534,54 @@ template <typename T> void selectAction(int typeNumber, SinglyLinkedList<T>& lis
 	}
 }
 
-template <typename T> void addFirstOption(int& typeNumber, SinglyLinkedList<T>& list) {
-	T value{};
-	switch (typeNumber) {
-	case 1: {
-		value = getIntegerValue(typeNumber);
-		list.addFirst(value);
-		break;
-	}
-	case 2: {
-		value = getDoubleValue(typeNumber);
-		list.addFirst(value);
-		break;
-	}
-	case 3: {
-		string str;
-		getline(cin, str);
-		list.addFirst(str);
-		break;
-	}
-	}
-}
-
-void selectListDataType() {
+void selectActionForDoubleList(int typeNumber, SinglyLinkedList<double>& list, string footer = "") {
 	bool exitLoop = false;
 	while (!exitLoop) {
-		int selectedType = getSelectedOption("Выберите тип данных для списка: ", { "int", "double", "string" }, "\n(Нажмите ESCAPE, чтобы выйти)");
-		switch (selectedType) {
+		int selectedAction = getSelectedOption("Ваш текущий список: " + list.toString() + "\n\nВыберите действие: ",
+			{ "добавить в начало", "добавить в конец", "очистить", "<- назад" }, footer);
+
+		switch (selectedAction) {
 		case 1: {
-			SinglyLinkedList<int> list1;
-			selectAction<int>(1, list1);
+			double value = getDoubleValue(typeNumber);
+			list.addFirst(value);
 			break;
 		}
 		case 2: {
-			SinglyLinkedList<double> list2;
-			selectAction<double>(2, list2);
+			double value = getDoubleValue(typeNumber);
+			list.addLast(value);
 			break;
 		}
 		case 3: {
-			SinglyLinkedList<string> list3;
-			selectAction<string>(3, list3);
+			list.removeAll();
+			break;
+		}
+		default: {
+			exitLoop = true;
+			break;
+		}
+		}
+	}
+}
+
+void selectActionForStringList(int typeNumber, SinglyLinkedList<string>& list, string footer = "") {
+	bool exitLoop = false;
+	while (!exitLoop) {
+		int selectedAction = getSelectedOption("Ваш текущий список: " + list.toString() + "\n\nВыберите действие: ",
+			{ "добавить в начало", "добавить в конец", "очистить", "<- назад" }, footer);
+
+		switch (selectedAction) {
+		case 1: {
+			string value = getStringValue();
+			list.addFirst(value);
+			break;
+		}
+		case 2: {
+			string value = getStringValue();
+			list.addLast(value);
+			break;
+		}
+		case 3: {
+			list.removeAll();
 			break;
 		}
 		default: {
@@ -630,31 +593,29 @@ void selectListDataType() {
 }
 
 int main() {
-	/*SinglyLinkedList<string> list1;
-	list1.addLast("string1");
-	list1.addLast("string2");
-	list1.addLast("string3");
-	list1.addLast("string4");
-	list1.addLast("string5");
-
-	SinglyLinkedList<int> list2;
-	list2.addLast(1);
-	list2.addLast(2);
-	list2.addLast(3);
-	list2.addLast(4);
-	list2.addLast(5);
-
-	SinglyLinkedList<bool> list3;
-	list3.addLast(true);
-	list3.addLast(false);
-	list3.addLast(true);
-	list3.addLast(true);
-	list3.addLast(false);*/
-
-	/*list.print();*/
-	/*fun<int>("f");*/
-	selectListDataType();
-	/*cout << list3.toString();*/
-	/*char input = _getch();
-	cout << static_cast<unsigned int>(input);*/
+	bool exitLoop = false;
+	while (!exitLoop) {
+		int selectedType = getSelectedOption("Выберите тип данных для списка: ", { "int", "double", "string" }, "\n(Нажмите ESCAPE, чтобы выйти)");
+		switch (selectedType) {
+		case 1: {
+			SinglyLinkedList<int> list;
+			selectActionForIntList(1, list);
+			break;
+		}
+		case 2: {
+			SinglyLinkedList<double> list;
+			selectActionForDoubleList(2, list);
+			break;
+		}
+		case 3: {
+			SinglyLinkedList<string> list;
+			selectActionForStringList(3, list);
+			break;
+		}
+		default: {
+			exitLoop = true;
+			break;
+		}
+		}
+	}
 }
