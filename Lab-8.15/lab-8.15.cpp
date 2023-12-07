@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <regex>
 #include <fstream>
+#include <sstream>
 using namespace std;
 
 /*
@@ -93,6 +94,79 @@ vector<pair<int, int>> getPathFromString(string& str) {
 
 	return path;
 }
+
+ // Посимвольный перебор
+//vector<pair<int, int>> getPathFromString(const string& input) {
+//	vector<pair<int, int>> result;
+//
+//	bool pairHasFirst = false;
+//
+//	string number;
+//	bool inNumber = false;
+//
+//	pair<int, int> newPair;
+//	for (char c : input) {
+//		if (isdigit(c) || c == '-' || c == ',') {
+//			if (c == '-') {
+//				// Добавляем минус в число, если он находится в начале числа
+//				if (number.empty() && !inNumber) {
+//					number += c;
+//					inNumber = true;
+//				}
+//				else {
+//					// Иначе это не число, игнорируем
+//					inNumber = false;
+//				}
+//			}
+//			else if (isdigit(c)) {
+//				// Добавляем цифру к числу
+//				number += c;
+//				inNumber = true;
+//			}
+//			else if (c == ',') {
+//				// Если встретили запятую, выводим число
+//				if (inNumber) {
+//					/*cout << number << endl;*/
+//
+//					if (pairHasFirst) {
+//						newPair.second = stoi(number);
+//						pairHasFirst = false;
+//						result.push_back(newPair);
+//					}
+//					else {
+//						newPair.first = stoi(number);
+//						pairHasFirst = true;
+//					}
+//
+//					number.clear();
+//					inNumber = false;
+//				}
+//			}
+//		}
+//		else {
+//			// Если символ не является цифрой, минусом или запятой,
+//			// считаем, что это разделитель чисел и сбрасываем число
+//			if (inNumber) {
+//				/*cout << number << endl;*/
+//				
+//				if (pairHasFirst) {
+//					newPair.second = stoi(number);
+//					pairHasFirst = false;
+//					result.push_back(newPair);
+//				}
+//				else {
+//					newPair.first = stoi(number);
+//					pairHasFirst = true;
+//				}
+//
+//				number.clear();
+//				inNumber = false;
+//			}
+//		}
+//	}
+//	return result;
+//}
+
 
 int main() {
 	ifstream file("pathCoords.txt");

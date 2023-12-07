@@ -3,22 +3,22 @@
 #include <algorithm>
 #include <sstream>
 
+/*
+Тема 2: работа с массивами и указателями, функции.
+5.Для заданной последовательности целых чисел (среди которых могут быть повторяющиеся)
+составить массив из чисел, которые входят в последовательность по одному разу.
+*/
+
+// multiple using-declarators (C++17)
+/*using namespace std;*/
 using std::vector,
 std::cin,
 std::cout,
 std::cerr;
 
-/*
-Тема 2: работа с массивами и указателями, функции.
-5.Для заданной последовательности целых чисел (среди которых могут быть повторяющиеся) 
-составить массив из чисел, которые входят в последовательность по одному разу.
-*/
 
-// multiple using-declarators
-// Range-based for loop (since C++11)
-// C++ keyword: auto
-// Дямбда функция в sort
-
+// C++ keyword auto (C++11)
+// vector<int> inputSequence()...
 auto inputSequence() {
 
     vector<std::string> stringSequence;
@@ -53,6 +53,8 @@ auto inputSequence() {
     return numSequence;
 }
 
+// C++ keyword auto (C++11)
+// vector<int> removeDuplicates(const vector<int>& sequence) ...
 auto removeDuplicates(const vector<int>& sequence) {
 
     vector<int> uniqueNumbers;
@@ -80,6 +82,8 @@ int main() {
     try {
         vector<int> sequence = inputSequence();
 
+        // Лямбда функция в sort (C++11)
+        // sort(sequence.begin(), sequence.end()); - тоже работает, но для более точного сравнения лучше:
         sort(sequence.begin(), sequence.end(), [](int a, int b) { return a < b; });
 
         vector<int> uniqueNumbers = removeDuplicates(sequence);

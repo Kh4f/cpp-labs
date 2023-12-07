@@ -1,18 +1,18 @@
 #include <iostream>
 #include <string>
 
-// multiple using-declarators require at least '/std:c++17'
-// Директива using для импорта нескольких имен из пространства имен в одной строке
-using std::cout,
-std::cin,
-std::cerr;
-
 /*
 Тема 1: знакомство с языком С++ и программирование линейных алгоритмов.
-5.Для заданного x и функции f (x) вычислить значение выражения. 
+5.Для заданного x и функции f (x) вычислить значение выражения.
 Предусмотреть выбор вида функции f(x) (x^2 ,e^x , sin(x) )
 */
 
+// multiple using-declarators require at least '/std:c++17'
+// Директива using для импорта нескольких имен из пространства имен в одной строке
+/*using namespace std;*/
+using std::cout,
+std::cin,
+std::cerr;
 
 double getInputX() {
 

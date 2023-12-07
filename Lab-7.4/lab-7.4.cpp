@@ -395,11 +395,6 @@ int getSelectedOption(string header, vector<string> options, string footer = "")
 	}
 }
 
-template <typename T> void fun(T value) {
-	T var = value;
-	cout << var;
-	SinglyLinkedList<T> list;
-}
 
 string getTypeName(int& typeNumber) {
 	string typeName;
