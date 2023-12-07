@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 
+// multiple using-declarators require at least '/std:c++17'
+// Директива using для импорта нескольких имен из пространства имен в одной строке
 using std::cout,
 std::cin,
 std::cerr;

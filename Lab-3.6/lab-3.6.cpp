@@ -10,6 +10,9 @@
 Отсортировать слова по возрастанию длины и полученный результат записать в файл f2.
 */
 
+// string::empty (until C++11)
+
+
 std::vector<std::string> textToWordsVector(std::ifstream& inputFile, std::ofstream& outputFile) {
     std::vector<std::string> words;
     std::string word;
@@ -40,7 +43,7 @@ int main() {
     }
 
     std::vector<std::string> words = textToWordsVector(inputFile, outputFile);
-    if (words.size() == 0) {
+    if (words.empty()) {
         std::cerr << "Слова не найдены.\n";
         return 1;
     }
