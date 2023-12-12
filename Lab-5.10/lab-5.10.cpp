@@ -2,8 +2,6 @@
 #include <vector>
 #include <conio.h>
 using namespace std;
-
-
 /*
 Тема 5: классы и объекты.
 10.Написать абстрактный класс «Работник фирмы».
@@ -12,7 +10,10 @@ using namespace std;
 */
 
 
-enum class WorkShift {
+// Constexpr (C++11)
+// Override (C++11)
+// Inline variable (C++17)
+constexpr enum WorkShift {
     Day,            // Дневная смена
     Evening,        // Вечерняя смена
     Night,          // Ночная смена
@@ -22,12 +23,11 @@ enum class WorkShift {
     Weekend         // Выходная смена
 };
 
-
 class Employee {
 public:
     virtual void displayDuties() const = 0;
     virtual int getCount() const = 0;
-    friend string getWorkShiftString(const Employee&);
+    constexpr friend string getWorkShiftString(const Employee&);
 
     void displayPersonalInfo() {
         cout << "Имя: " << name << "\n"
@@ -66,8 +66,7 @@ private:
     static inline int employeeCount{};
 };
 
-
-string getWorkShiftString(const Employee& employee) {
+constexpr string getWorkShiftString(const Employee& employee) {
     WorkShift shift = employee.shift;
     switch (shift) {
         case WorkShift::Day:
@@ -95,7 +94,6 @@ string getWorkShiftString(const Employee& employee) {
             return "None";
     }
 }
-
 
 class Manager : public Employee {
 private:
@@ -128,7 +126,6 @@ protected:
     };
 };
 
-
 class Administrator : public Employee {
 private:
     static inline int administratorCount{};
@@ -159,7 +156,6 @@ protected:
         " -Обработка входящей и исходящей корреспонденции, приём телефонных звонков."
     };
 };
-
 
 class Programmer : public Employee {
 private:
@@ -192,14 +188,12 @@ protected:
     };
 };
 
-
 class Company {
 public:
     vector<Manager> managers;
     vector<Administrator> administrators;
     vector<Programmer> programmers;
 };
-
 
 
 void waitToPressEnter() {
@@ -293,7 +287,7 @@ void dutiesOfPosition(Company& myCompany, int poistion) {
     }
 }
 
-void displayEmloyeesInfo(Company& myCompany, int poistion) {
+void displayEmployeesInfo(Company& myCompany, int poistion) {
     switch (poistion) {
         case 1:
             for (size_t i = 0; i < myCompany.managers.size(); i++) {
@@ -343,7 +337,7 @@ void selectAction(Company& myCompany, int poistion) {
                 break;
             case 3:
                 system("cls");
-                displayEmloyeesInfo(myCompany, poistion);
+                displayEmployeesInfo(myCompany, poistion);
                 cout << "\n";
                 waitToPressEnter();
                 break;
@@ -375,25 +369,26 @@ void selectEmployeePosition(Company& myCompany) {
     }
 }
 
-
-
 int main() {
     Company myCompany;
-    myCompany.managers.push_back({ "Петров Вячеслав", 23, "ул. Косиора, 18", "+7 932 195 477", "pacido57@gmail.com", WorkShift::Overtime, 6, 70000 });
-    myCompany.managers.push_back({ "Павлов Максим", 20, "ул. Славы, 64", "+7 993 969 454", "jebogo80@aol.com", WorkShift::Day, 1, 71000.500 });
-    myCompany.managers.push_back({ "Рудаков Леонид", 22, "въезд Сталина, 96", "+7 911 256 159", "fayifle56@hotmail.com", WorkShift::Rotating, 8, 65000.200 });
+    myCompany.managers.push_back({"Петров Вячеслав", 23, "ул. Косиора, 18", "+7 932 195 477", "pacido57@gmail.com", WorkShift::Overtime, 6, 70000});
+    myCompany.managers.push_back({"Павлов Максим", 20, "ул. Славы, 64", "+7 993 969 454", "jebogo80@aol.com", WorkShift::Day, 1, 71000.500});
+    myCompany.managers.push_back({"Рудаков Леонид", 22, "въезд Сталина, 96", "+7 911 256 159", "fayifle56@hotmail.com", WorkShift::Rotating, 8, 65000.200});
 
-    myCompany.administrators.push_back({ "Денисов Роман", 30, "наб. Ломоносова, 52", "+7 953 852 857", "fikxe64@aol.com", WorkShift::TwelveHour, 1, 102000 });
-    myCompany.administrators.push_back({ "Данилов Марк", 19, "шоссе Славы, 47", "+7 985 458 250", "swezito73@mail.com", WorkShift::Day, 5, 59000 });
-    myCompany.administrators.push_back({ "Чернов Егор", 25, "спуск Космонавтов, 83", "+7 900 097 490", "wodole9@hotmail.com", WorkShift::Weekend, 2, 115500 });
+    myCompany.administrators.push_back({"Денисов Роман", 30, "наб. Ломоносова, 52", "+7 953 852 857", "fikxe64@aol.com", WorkShift::TwelveHour, 1, 102000});
+    myCompany.administrators.push_back({"Данилов Марк", 19, "шоссе Славы, 47", "+7 985 458 250", "swezito73@mail.com", WorkShift::Day, 5, 59000});
+    myCompany.administrators.push_back({"Чернов Егор", 25, "спуск Космонавтов, 83", "+7 900 097 490", "wodole9@hotmail.com", WorkShift::Weekend, 2, 115500});
 
-
-    myCompany.programmers.push_back({ "Григорьев Артемий", 24, "пр. Бухарестская, 71", "+7 954 821 257", "wivna89@hotmail.com", WorkShift::Day, 7, 156000 });
-    myCompany.programmers.push_back({ "Афанасьев Михаил", 25, "бульвар 1905 года, 89", "+7 956 054 501", "dogasu4i60@outlook.com", WorkShift::Evening, 5, 190000 });
-    myCompany.programmers.push_back({ "Филимонов Мирон", 31, "ул. Ленина, 48", "+7 908 650 020", "bebado23@gmail.com", WorkShift::Night, 3, 89800 });
-
+    myCompany.programmers.push_back({"Григорьев Артемий", 24, "пр. Бухарестская, 71", "+7 954 821 257", "wivna89@hotmail.com", WorkShift::Day, 7, 156000});
+    myCompany.programmers.push_back({"Афанасьев Михаил", 25, "бульвар 1905 года, 89", "+7 956 054 501", "dogasu4i60@outlook.com", WorkShift::Evening, 5, 190000});
+    myCompany.programmers.push_back({"Филимонов Мирон", 31, "ул. Ленина, 48", "+7 908 650 020", "bebado23@gmail.com", WorkShift::Night, 3, 89800});
 
     selectEmployeePosition(myCompany);
 }
 
+//1.constexpr - компилятор проверяет корректность выражений еще до выполнения программы
+//              + значения уже известны компилятору, что ускоряет программы
+//2.override - явно указывает компилятору, что это переопределяемая функция
+//              + компилятор генерит ошибку, если помеченная функция не соответствует виртуальной функции в базовом классе
+//3. inline - позволяет инициализировать static переменную прямо в классе
 

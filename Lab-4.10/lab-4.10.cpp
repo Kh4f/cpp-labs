@@ -4,11 +4,9 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include <thread>
-#include <chrono>
 #include <algorithm>
+#include <regex>
 using namespace std;
-
 /*
 Тема 4: пользовательские типы данных (структуры, объединения, перечисления).
 10.Описать структуру, содержащую информацию о деятельности музея. 
@@ -19,6 +17,10 @@ using namespace std;
 Например, вывести список всех экспонатов второго зала. Формы запросов придумать самостоятельно.
 */
 
+
+// constexpr + getUserInteger - regex
+//1.Регулярные выражения (C++11)
+//2.Constexpr (C++11)
 struct MyMuseum {
 
     struct Exhibit {
@@ -60,6 +62,11 @@ struct MyMuseum {
     vector<Hall> halls;
     vector<Employee> employees;
     vector<Excursion> excursions;
+
+    MyMuseum(string name, string address) {
+        this->name = name;
+        this->address = address;
+    }
 
     void readExhibitsFromFile(ifstream& file) {
         std::string line;
@@ -176,37 +183,83 @@ void writeExhibitToFile(string& name, string& author, string& description, int& 
     outputFile.close();
 }
 
-int getAnInteger(string header) {
-    string inputValue;
-    out:
-    cout << header;
-    getline(cin >> ws, inputValue);
-    for (int i = 0; i < inputValue.length(); i++) {
-        char& c = inputValue[i];
-        if (c == '-' && i == 0) {
-            continue;
-        }
-        if (!isdigit(c)) {
-            cout << "Требуется целое число. Попробуйте ещё раз.\n";
-            goto out;
-        }
-    }
-    return stoi(inputValue);
-}
 
-int getPositiveInteger(string header) {
-    string inputValue;
-    out:
-    cout << header;
-    getline(cin >> ws, inputValue);
-    for (char& c : inputValue) {
-        if (!isdigit(c)) {
-            cout << "Требуется целое положительное число. Попробуйте ещё раз.\n";
-            goto out;
+// 1.RegExp (C++11)
+int getUserInteger(string header, bool positiveInt = false) {
+    string input;
+    bool valueIsValid = false;
+    string patternString = positiveInt ? "\\d+" : "-?\\d+";
+    regex pattern(patternString);
+
+    do {
+        valueIsValid = true;
+        cout << header;
+        getline(cin >> std::ws, input);
+
+        if (!regex_match(input, pattern)) {
+            valueIsValid = false;
+            cout << "Некорректный ввод. Попробуйте ещё раз.\n" ;
         }
-    }
-    return stoi(inputValue);
+
+    } while (!valueIsValid);
+
+    return stoi(input);
 }
+/*int getUserInteger(string header) {
+    string input;
+    bool valueIsValid = false;
+
+    do {
+        valueIsValid = true;
+        cout << header;
+        getline(cin >> ws, input);
+
+        if (input == "-") {
+            valueIsValid = false;
+        } else if ((input[0] != '-') && !isdigit(input[0])) {
+            valueIsValid = false;
+        } else {
+            for (int i = 1; i < input.length(); i++) {
+                if (!isdigit(input[i])) {
+                    valueIsValid = false;
+                    break;
+                }
+            }
+        }
+
+        if (!valueIsValid) {
+            cout << "Требуется целое число. Попробуйте ещё раз.\n";
+        }
+
+    } while (!valueIsValid);
+
+    return stoi(input);
+}*/
+/*int getPositiveInteger(string header) {
+    string input;
+    bool valueIsValid = false;
+
+    do {
+        valueIsValid = true;
+        cout << header;
+        getline(cin >> ws, input);
+
+        for (int i = 0; i < input.length(); i++) {
+            if (!isdigit(input[i])) {
+                valueIsValid = false;
+                break;
+            }
+        }
+
+        if (!valueIsValid) {
+            cout << "Требуется целое число. Попробуйте ещё раз.\n";
+        }
+
+    } while (!valueIsValid);
+
+    return stoi(input);
+}*/
+
 
 void waitToPressEnter() {
     cout << "(Нажмите Enter, чтобы вернуться)";
@@ -231,13 +284,13 @@ void createNewExhibit(MyMuseum& myMuseum) {
     getline(cin >> ws, author);
     replaceDelimToSpace(author);
     
-    int year = getAnInteger("Год создания: ");
+    int year = getUserInteger("Год создания: ");
 
     cout << "Описание: ";
     getline(cin >> ws, description);
     replaceDelimToSpace(description);
     
-    int hallNumber = getPositiveInteger("Номер зала: ");
+    int hallNumber = getUserInteger("Номер зала: ", true);
 
     myMuseum.addExhibit(name, author, description, year, hallNumber);
     writeExhibitToFile(name, author, description, year, hallNumber);
@@ -271,7 +324,7 @@ void chooseActionOnExhibits(MyMuseum& myMuseum) {
             break;
         }
         case 2: {
-            int number = getPositiveInteger("\nВведите номер зала: ");
+            int number = getUserInteger("\nВведите номер зала: ", true);
             system("cls");
 
             bool hallExists = false;
@@ -291,8 +344,8 @@ void chooseActionOnExhibits(MyMuseum& myMuseum) {
             break;
         }
         case 3: {
-            int minYear = getAnInteger("\nВведите первый год диапазона: ");
-            int maxYear = getAnInteger("Введите второй год диапазона: ");
+            int minYear = getUserInteger("\nВведите первый год диапазона: ");
+            int maxYear = getUserInteger("Введите второй год диапазона: ");
             if (maxYear < minYear) {
                 int temp = maxYear;
                 maxYear = minYear;
@@ -341,8 +394,11 @@ void runMainMenu(MyMuseum& myMuseum) {
     }
 }
 
+// 2.Constexpr specifier (C++11)
 int main() {
-    MyMuseum myMuseum;
+    constexpr auto museumName = "Test Museum";
+    constexpr auto museumAddress = "24 Stark Parkways, Lindystad, KY";
+    MyMuseum myMuseum(museumName, museumAddress);
 
     ifstream file("exhibits.txt");
     if (!file.is_open()) {
@@ -353,4 +409,8 @@ int main() {
 
     runMainMenu(myMuseum);
 }
+
+//1.regexp - компактность + эффективность 
+//2.constexpr - компилятор проверяет корректность выражений еще до выполнения программы
+//              + значения уже известны компилятору, что ускоряет программы
 

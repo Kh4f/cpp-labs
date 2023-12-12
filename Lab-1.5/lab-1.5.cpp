@@ -1,83 +1,81 @@
 #include <iostream>
 #include <string>
-
+#include <cmath>
+#include <regex>
 /*
 Тема 1: знакомство с языком С++ и программирование линейных алгоритмов.
 5.Для заданного x и функции f (x) вычислить значение выражения.
 Предусмотреть выбор вида функции f(x) (x^2 ,e^x , sin(x) )
 */
 
-// multiple using-declarators require at least '/std:c++17'
-// Директива using для импорта нескольких имен из пространства имен в одной строке
-/*using namespace std;*/
-using std::cout,
-std::cin,
-std::cerr;
 
-double getInputX() {
+// 1.Множественный импорт имён в using-объявлении (c++17)
+using std::cout, std::cin, std::cerr;
 
+// 2.Регулярные выражения (C++11)
+double getUserDouble() {
     std::string input;
-    double result;
+    bool valueIsValid = false;
+    std::regex pattern("-?(\\d+|\\d*\\.\\d+)");
 
-xInputLoop:
     do {
+        valueIsValid = true;
         cout << "Enter x: ";
         getline(cin >> std::ws, input);
 
-        if (input == "-") {
-            cout << "Error: There is a non-integer in the sequence.\n\n";
-            goto xInputLoop;
-        }
-        if (input[0] != '-' && !isdigit(input[0])) {
+        if (!regex_match(input, pattern)) {
+            valueIsValid = false;
             cout << "Error: The entered number is not a double.\n\n";
-            goto xInputLoop;
         }
 
-        int dotCount = 0;
-        for (int i = 1; i < input.length(); i++) {
-            if (input[i] == '.') {
-                dotCount++;
-                if (dotCount > 1) {
-                    cout << "Error: The entered number is not a double.\n\n";
-                    goto xInputLoop;
-                }
-                continue;
+    } while (!valueIsValid);
 
-            } else if (!isdigit(input[i])) {
-                cout << "Error: The entered number is not a double.\n\n";
-                goto xInputLoop;
-            }
-        }
-        result = stod(input);
-
-    } while (!result);
-
-
-
-    if (input == "-") {
-        throw std::invalid_argument("Error: There is a non-integer in the sequence.");
-    }
-    if (input[0] != '-' && !isdigit(input[0])) {
-        throw std::invalid_argument("Error: The entered number is not a double.");
-    }
-
-    int dotCount = 0;
-    for (int i = 1; i < input.length(); i++) {
-        if (input[i] == '.') {
-            dotCount++;
-            if (dotCount > 1) {
-                throw std::invalid_argument("Error: The entered number is not a double.");
-            }
-            continue;
-        } else if (!isdigit(input[i])) {
-            throw std::invalid_argument("Error: The entered number is not a double.");
-        }
-    }
     return stod(input);
 }
+//double getUserDouble() {
+//    std::string input;
+//    bool valueIsValid = false;
+//
+//    do {
+//        valueIsValid = true;
+//        cout << "Enter x: ";
+//        getline(cin >> std::ws, input);
+//
+//        if (input == "-" || input == ".") {
+//            valueIsValid = false;
+//        } else if ((input[0] != '-') && !isdigit(input[0]) && (input[0] != '.')) {
+//            valueIsValid = false;
+//        } else {
+//            int dotCount = 0;
+//            if (input[0] == '.') {
+//                dotCount++;
+//            }
+//            for (int i = 1; i < input.length(); i++) {
+//                if (input[i] == '.') {
+//                    dotCount++;
+//                    if (dotCount > 1) {
+//                        valueIsValid = false;
+//                        break;
+//                    }
+//                    continue;
+//
+//                } else if (!isdigit(input[i])) {
+//                    valueIsValid = false;
+//                    break;
+//                }
+//            }
+//        }
+//
+//        if (!valueIsValid) {
+//            cout << "Error: The entered number is not a double.\n\n";
+//        }
+//
+//    } while (!valueIsValid);
+//
+//    return stod(input);
+//}
 
 int chooseFunctionType() {
-
     std::string input;
     cout << "\n" << "Choose f(x) type: " << "\n"
         << "1. x^2" << "\n"
@@ -96,7 +94,6 @@ int chooseFunctionType() {
 }
 
 double calculateFunction(double& x, int& f_type) {
-
     double f;
 
     switch (f_type) {
@@ -117,13 +114,12 @@ double calculateFunction(double& x, int& f_type) {
 }
 
 double calculateY(double& x, double& f) {
-
     return (x > 0) ? sin(x) / (1 + pow(f, 4)) : cbrt(cos(x) * cos(x));
 }
 
 int main() {
     try {
-        double x = getInputX();
+        double x = getUserDouble();
         int f_type = chooseFunctionType();
         double f = calculateFunction(x, f_type);
         double y = calculateY(x, f);
@@ -132,3 +128,6 @@ int main() {
         cerr << err.what() << '\n';
     }
 }
+
+//1.using - предотвращение дублирования 'using' + уменьшение шанса получения конфликта имён
+//2.regexp - компактность + эффективность 

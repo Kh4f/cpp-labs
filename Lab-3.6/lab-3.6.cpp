@@ -3,27 +3,25 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-
+using namespace std;
 /*
 Тема 3: работа с файлами в C++.
 6.Дан текстовый файл f1, содержащий текст на английском языке. 
 Отсортировать слова по возрастанию длины и полученный результат записать в файл f2.
 */
 
-// string::empty (until C++11)
 
-
-std::vector<std::string> textToWordsVector(std::ifstream& inputFile, std::ofstream& outputFile) {
-    std::vector<std::string> words;
-    std::string word;
+vector<string> textToWordsArray(ifstream& inputFile, ofstream& outputFile) {
+    vector<string> words;
+    string word;
     while (inputFile >> word) {
         size_t leftIndex = 0;
-        while (leftIndex < word.length() && !std::isalpha(word[leftIndex])) {
+        while (leftIndex < word.length() && !isalpha(word[leftIndex])) {
             leftIndex++;
         }
 
         size_t rightIndex = word.length() - 1;
-        while (rightIndex > leftIndex && !std::isalpha(word[rightIndex])) {
+        while (rightIndex > leftIndex && !isalpha(word[rightIndex])) {
             rightIndex--;
         }
 
@@ -34,29 +32,31 @@ std::vector<std::string> textToWordsVector(std::ifstream& inputFile, std::ofstre
     return words; 
 }
 
+// 1.Empty (until C++11)
+// 2.Лямбда функция в sort (C++11)
 int main() {
-    std::ifstream inputFile("f1.txt");
-    std::ofstream outputFile("f2.txt");
+    ifstream inputFile("f1.txt");
+    ofstream outputFile("f2.txt");
     if (!inputFile.is_open() || !outputFile.is_open()) {
-        std::cerr << "Ошибка открытия файлов.\n";
+        cerr << "Ошибка открытия файлов.\n";
         return 1;
     }
 
-    std::vector<std::string> words = textToWordsVector(inputFile, outputFile);
+    vector<string> words = textToWordsArray(inputFile, outputFile);
     if (words.empty()) {
-        std::cerr << "Слова не найдены.\n";
+        cerr << "Слова не найдены.\n";
         return 1;
     }
-    std::sort(words.begin(), words.end(), [](const std::string& a, const std::string& b) {
-        return a.length() < b.length();
-    });
+    sort(words.begin(), words.end(), [](const string& a, const string& b) {return a.length() < b.length();});
 
-    for (const std::string& w : words) {
+    for (const string& w : words) {
         outputFile << w << "\n";
     }
 
     inputFile.close();
     outputFile.close();
-    std::cout << "Слова отсортированы и записаны в файл f2.txt\n";
+    cout << "Слова отсортированы и записаны в файл f2.txt\n";
 }
 
+//1.empty - более нагляден и понятен из-за своего названия + делает код более читаемым
+//2.sort w/ lambda - гибкость в сортировке
